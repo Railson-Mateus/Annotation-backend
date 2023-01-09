@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { AnnotationsService } from './annotations.service';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
 import { UpdateAnnotationDto } from './dto/update-annotation.dto';
@@ -23,7 +31,10 @@ export class AnnotationsController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAnnotationDto: UpdateAnnotationDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateAnnotationDto: UpdateAnnotationDto,
+  ) {
     return this.annotationsService.update(+id, updateAnnotationDto);
   }
 
