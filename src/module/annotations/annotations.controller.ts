@@ -9,7 +9,6 @@ import {
 } from '@nestjs/common';
 import { AnnotationsService } from './annotations.service';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
-import { UpdateAnnotationDto } from './dto/update-annotation.dto';
 
 @Controller('annotations')
 export class AnnotationsController {
@@ -33,7 +32,7 @@ export class AnnotationsController {
   @Patch(':id')
   update(
     @Param('id') id: string,
-    @Body() updateAnnotationDto: UpdateAnnotationDto,
+    @Body() updateAnnotationDto: CreateAnnotationDto,
   ) {
     return this.annotationsService.update(+id, updateAnnotationDto);
   }
