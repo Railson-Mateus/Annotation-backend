@@ -16,19 +16,39 @@ export class AnnotationsService {
    return createAnnotation
   }
 
-  findAll() {
-    return `This action returns all annotations`;
+  async findAll() {
+    const annotations= await this.prisma.annotation.findMany()
+    return annotations
   }
 
   findOne(id: number) {
     return `This action returns a #${id} annotation`;
   }
 
-  update(id: number, createAnnotationDto: CreateAnnotationDto) {
-    return `This action updates a #${id} annotation`;
+  async update(id: string, updateAnnotation: CreateAnnotationDto) {
+    const annotation = await this.prisma.annotation.update({
+      where:{
+        id,
+      },
+      data:{
+        ...updateAnnotation
+      }
+    })
+    if(!annotation){
+      throw new Error("anotação não encontrada")
+    }
+    return annotation
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} annotation`;
+  async remove(id: string) {
+    const annotation = await this.prisma.annotation.delete({
+      where:{
+        id,
+      },
+    })
+    if(!annotation){
+      throw new Error("anotação não encontrada")
+    }
+    return annotation
   }
 }
