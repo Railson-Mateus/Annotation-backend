@@ -7,6 +7,20 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User{
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  email String @unique
+  name String?
+  imageUrl String?
+  password String 
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  annotations Annotation[]
+
+  @@map("users")
+}
+
 model Annotation{
   id String @id @default(auto()) @map("_id") @db.ObjectId
   title String
@@ -16,6 +30,9 @@ model Annotation{
   status Status @default(Progress) 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
+  userId String
+
+  user User @relation(fields:[userId], references:[id])
 
   @@map("annotations")
 }

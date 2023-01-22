@@ -8,11 +8,14 @@ export class AnnotationsService {
 
   async create(createAnnotationDto: CreateAnnotationDto) {
     const data={
-      ...createAnnotationDto
+      ...createAnnotationDto,
+      userId: "wijfieorjfoerjfe",
     }
+
    const createAnnotation = await this.prisma.annotation.create({
     data,
    })
+
    return createAnnotation
   }
 
