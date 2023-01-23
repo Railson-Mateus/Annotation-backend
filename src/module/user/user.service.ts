@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { PrismaService } from '../../database/PrismaService';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 @Injectable()
 export class UserService {
@@ -10,9 +11,9 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     const userExists = await this.prisma.user.findFirst({
-      where:{
-        email: createUserDto.email
-      }
+      where: {
+        email: createUserDto.email,
+      },
     });
 
     if (userExists) {
@@ -22,40 +23,42 @@ export class UserService {
     const data = {
       ...createUserDto,
       createdAt: new Date(),
-      password: await bcrypt.hash(createUserDto.password, 10)
-    }
+      password: await bcrypt.hash(createUserDto.password, 10),
+    };
 
-    const createdUser = await this.prisma.user.create({data});
+    const createdUser = await this.prisma.user.create({ data });
 
     return {
       ...createdUser,
-      password: undefined
-    }
+      password: undefined,
+    };
   }
-  
+
   async findByEmail(email: string) {
     const user = await this.prisma.user.findFirst({
-      where:{
-        email
-      }
+      where: {
+        email,
+      },
     });
 
     return user;
   }
 
-  async update(updateUser: CreateUserDto, user: User) {
+  async update(updateUser: UpdateUserDto, user: User) {
     const data = {
       ...updateUser,
       updatedAt: new Date(),
-      password: updateUser.password ? await bcrypt.hash(updateUser.password, 10) : undefined
-    }
+      password: updateUser.password
+        ? await bcrypt.hash(updateUser.password, 10)
+        : undefined,
+    };
 
     const updatedUser = this.prisma.user.update({
       where: {
-        id: user.id
+        id: user.id,
       },
-      data
-    })
+      data,
+    });
 
     return updatedUser;
   }
