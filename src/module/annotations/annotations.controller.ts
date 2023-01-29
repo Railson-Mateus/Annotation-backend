@@ -6,27 +6,33 @@ import {
   Patch,
   Param,
   Delete,
+  Req,
 } from '@nestjs/common';
 import { AnnotationsService } from './annotations.service';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import { User } from 'src/module/user/entities/user.entity';
 
 @Controller('annotations')
 export class AnnotationsController {
   constructor(private readonly annotationsService: AnnotationsService) {}
 
   @Post()
-  create(@Body() createAnnotationDto: CreateAnnotationDto) {
-    return this.annotationsService.create(createAnnotationDto);
+  create(
+    @Body() createAnnotationDto: CreateAnnotationDto,
+    @CurrentUser() user: User,
+  ) {
+    return this.annotationsService.create(createAnnotationDto, user);
   }
 
   @Get()
-  findAll() {
-    return this.annotationsService.findAll();
+  findAll(@CurrentUser() user: User) {
+    return this.annotationsService.findAll(user);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.annotationsService.findOne(+id);
+  @Get('fullTextSearch')
+  fullTextSearch() {
+    return this.annotationsService.fullTextSearch();
   }
 
   @Patch(':id')

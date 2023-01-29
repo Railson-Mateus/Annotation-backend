@@ -1,57 +1,70 @@
 import { Injectable } from '@nestjs/common';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
 import { PrismaService } from '../../database/PrismaService';
+import { Annotation, AnnotationDocument } from './dto/annotation.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
+import { User } from '../user/entities/user.entity';
 
 @Injectable()
 export class AnnotationsService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    @InjectModel(Annotation.name)
+    private annotationModel: Model<AnnotationDocument>,
+  ) {}
 
-  async create(createAnnotationDto: CreateAnnotationDto) {
-    const data={
+  async create(createAnnotationDto: CreateAnnotationDto, user: User) {
+    const data = {
       ...createAnnotationDto,
-      userId: "wijfieorjfoerjfe",
-    }
+      userId: user.id,
+    };
 
-   const createAnnotation = await this.prisma.annotation.create({
-    data,
-   })
+    const createAnnotation = await this.prisma.annotation.create({
+      data,
+    });
 
-   return createAnnotation
+    return createAnnotation;
   }
 
-  async findAll() {
-    const annotations= await this.prisma.annotation.findMany()
-    return annotations
+  async findAll(user: User) {
+    const annotations = await this.prisma.annotation.findMany({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    return annotations;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} annotation`;
+  fullTextSearch() {
+    return this.annotationModel.find().exec();
   }
 
   async update(id: string, updateAnnotation: CreateAnnotationDto) {
     const annotation = await this.prisma.annotation.update({
-      where:{
+      where: {
         id,
       },
-      data:{
-        ...updateAnnotation
-      }
-    })
-    if(!annotation){
-      throw new Error("anotação não encontrada")
+      data: {
+        ...updateAnnotation,
+      },
+    });
+    if (!annotation) {
+      throw new Error('anotação não encontrada');
     }
-    return annotation
+    return annotation;
   }
 
   async remove(id: string) {
     const annotation = await this.prisma.annotation.delete({
-      where:{
+      where: {
         id,
       },
-    })
-    if(!annotation){
-      throw new Error("anotação não encontrada")
+    });
+    if (!annotation) {
+      throw new Error('anotação não encontrada');
     }
-    return annotation
+    return annotation;
   }
 }

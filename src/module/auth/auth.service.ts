@@ -13,18 +13,30 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  login(user: User): UserToken {
-    const payload: UserPayload = {
+  async login(data): Promise<UserToken> {
+    const { email, password } = data;
+    console.log();
+    const user = await this.userService.findByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      throw new Error('Invalid password');
+    }
+
+    const payload = {
       sub: user.id,
       email: user.email,
       name: user.name,
       imageUrl: user.imageUrl,
     };
 
-    const accessToken = this.jwtService.sign(payload);
+    const token = await this.jwtService.sign(payload);
 
     return {
-      accessToken,
+      accessToken: token,
     };
   }
 
