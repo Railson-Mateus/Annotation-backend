@@ -8,7 +8,7 @@ import {
   Delete,
   Req,
 } from '@nestjs/common';
-import { AnnotationsService } from './annotations.service';
+import { AnnotationsService, ISearch } from './annotations.service';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { User } from 'src/module/user/entities/user.entity';
@@ -30,9 +30,9 @@ export class AnnotationsController {
     return this.annotationsService.findAll(user);
   }
 
-  @Get('fullTextSearch')
-  fullTextSearch() {
-    return this.annotationsService.fullTextSearch();
+  @Post('fullTextSearch')
+  fullTextSearch(@Body() search: ISearch, @CurrentUser() user: User) {
+    return this.annotationsService.fullTextSearch(search, user);
   }
 
   @Patch(':id')

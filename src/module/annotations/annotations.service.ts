@@ -6,6 +6,10 @@ import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../user/entities/user.entity';
 
+export interface ISearch {
+  text: string;
+}
+
 @Injectable()
 export class AnnotationsService {
   constructor(
@@ -37,8 +41,23 @@ export class AnnotationsService {
     return annotations;
   }
 
-  fullTextSearch() {
-    return this.annotationModel.find().exec();
+  async fullTextSearch(searchText: ISearch, user: User) {
+    console.log(searchText.text);
+    const search = await this.annotationModel.aggregate([
+      {
+        $search: {
+          index: 'default',
+          text: {
+            query: searchText.text,
+            path: {
+              wildcard: '*',
+            },
+          },
+        },
+      },
+    ]);
+
+    return search;
   }
 
   async update(id: string, updateAnnotation: CreateAnnotationDto) {
