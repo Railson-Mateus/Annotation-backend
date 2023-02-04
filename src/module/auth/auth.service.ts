@@ -37,6 +37,7 @@ export class AuthService {
 
     return {
       accessToken: token,
+      userPayload: payload,
     };
   }
 
