@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Post, Patch } from '@nestjs/common';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { IsPublic } from '../auth/decorators/is-public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -16,7 +16,7 @@ export class UserController {
     return this.userService.create(createUserDto);
   }
 
-  @Patch()
+  @Post('update')
   update(@Body() updateUserDto: UpdateUserDto, @CurrentUser() user: User) {
     return this.userService.update(updateUserDto, user);
   }

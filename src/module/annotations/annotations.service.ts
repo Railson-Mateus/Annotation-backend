@@ -41,6 +41,16 @@ export class AnnotationsService {
     return annotations;
   }
 
+  async findOne(id: string) {
+    const annotation = await this.prisma.annotation.findUnique({
+      where: {
+        id,
+      },
+    });
+
+    return { annotation };
+  }
+
   async fullTextSearch(searchText: ISearch, user: User) {
     console.log(searchText.text);
     const search = await this.annotationModel.aggregate([

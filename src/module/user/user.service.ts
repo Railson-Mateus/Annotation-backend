@@ -60,6 +60,12 @@ export class UserService {
       data,
     });
 
-    return updatedUser;
+    const res = {
+      email: updateUser.email,
+      imageUrl: updateUser.imageUrl,
+      name: updateUser.name,
+    };
+    console.log(res);
+    return res;
   }
 }

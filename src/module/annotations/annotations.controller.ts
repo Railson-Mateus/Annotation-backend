@@ -25,6 +25,11 @@ export class AnnotationsController {
     return this.annotationsService.create(createAnnotationDto, user);
   }
 
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.annotationsService.findOne(id);
+  }
+
   @Get()
   findAll(@CurrentUser() user: User) {
     return this.annotationsService.findAll(user);
@@ -47,4 +52,8 @@ export class AnnotationsController {
   remove(@Param('id') id: string) {
     return this.annotationsService.remove(id);
   }
+}
+
+interface idAnnotation {
+  id: string;
 }
