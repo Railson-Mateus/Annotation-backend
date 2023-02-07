@@ -53,7 +53,7 @@ export class UserService {
         : undefined,
     };
 
-    const updatedUser = this.prisma.user.update({
+    const updatedUser = await this.prisma.user.update({
       where: {
         id: user.id,
       },
