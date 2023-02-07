@@ -52,7 +52,6 @@ export class AnnotationsService {
   }
 
   async fullTextSearch(searchText: ISearch, user: User) {
-    console.log(searchText.text);
     const search = await this.annotationModel.aggregate([
       {
         $search: {
