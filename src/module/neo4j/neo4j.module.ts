@@ -17,4 +17,4 @@ export const neo4jProvider = {
   controllers: [Neo4jController],
   providers: [neo4jProvider, Neo4jService],
 })
-export class Neo4jModule { }
+export class Neo4jModule {}

@@ -1,17 +1,16 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
-  Req,
+  Get,
+  Param,
+  Patch,
+  Post,
 } from '@nestjs/common';
+import { User } from 'src/module/user/entities/user.entity';
+import { CurrentUser } from '../auth/decorators/current-user.decorator';
 import { AnnotationsService, ISearch } from './annotations.service';
 import { CreateAnnotationDto } from './dto/create-annotation.dto';
-import { CurrentUser } from '../auth/decorators/current-user.decorator';
-import { User } from 'src/module/user/entities/user.entity';
 
 @Controller('annotations')
 export class AnnotationsController {

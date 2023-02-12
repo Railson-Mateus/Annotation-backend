@@ -18,7 +18,7 @@ export class AnnotationsService {
     @InjectModel(Annotation.name)
     private annotationModel: Model<AnnotationDocument>,
     private neo4jService: Neo4jService,
-  ) { }
+  ) {}
 
   async create(createAnnotationDto: CreateAnnotationDto, user: User) {
     const data = {
@@ -29,13 +29,13 @@ export class AnnotationsService {
     const createAnnotation = await this.prisma.annotation.create({
       data,
     });
-    console.log("aqui");
 
     try {
       const node = await this.neo4jService.createNode(
         createAnnotation.id,
         user.id,
       );
+      console.log('Criou nó');
     } catch {
       console.log('aqui');
     }
