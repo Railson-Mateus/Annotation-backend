@@ -5,15 +5,15 @@ import { AnnotationsModule } from './module/annotations/annotations.module';
 import { AuthModule } from './module/auth/auth.module';
 import { JwtAuthGuard } from './module/auth/guads/jwt-auth.guard';
 import { UserModule } from './module/user/user.module';
+import { Neo4jModule } from './module/neo4j/neo4j.module';
 
 @Module({
   imports: [
     UserModule,
     AnnotationsModule,
     AuthModule,
-    MongooseModule.forRoot(
-      'mongodb+srv://admin:96956515@cluster0.bssr30z.mongodb.net/myAnnotations?retryWrites=true&w=majority',
-    ),
+    MongooseModule.forRoot(process.env.DATABASE_URL),
+    Neo4jModule,
   ],
   controllers: [],
   providers: [
