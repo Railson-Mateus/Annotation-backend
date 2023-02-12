@@ -5,6 +5,7 @@ import { Annotation, AnnotationDocument } from './dto/annotation.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../user/entities/user.entity';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 export interface ISearch {
   text: string;
@@ -16,7 +17,8 @@ export class AnnotationsService {
     private readonly prisma: PrismaService,
     @InjectModel(Annotation.name)
     private annotationModel: Model<AnnotationDocument>,
-  ) {}
+    private neo4jService: Neo4jService,
+  ) { }
 
   async create(createAnnotationDto: CreateAnnotationDto, user: User) {
     const data = {
@@ -27,6 +29,16 @@ export class AnnotationsService {
     const createAnnotation = await this.prisma.annotation.create({
       data,
     });
+    console.log("aqui");
+
+    try {
+      const node = await this.neo4jService.createNode(
+        createAnnotation.id,
+        user.id,
+      );
+    } catch {
+      console.log('aqui');
+    }
 
     return createAnnotation;
   }
