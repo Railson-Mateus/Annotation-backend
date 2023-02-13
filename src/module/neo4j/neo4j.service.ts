@@ -3,7 +3,7 @@ import { Driver } from 'neo4j-driver';
 
 @Injectable()
 export class Neo4jService {
-  constructor(@Inject('Neo4j') private readonly driver: Driver) {}
+  constructor(@Inject('Neo4j') private readonly driver: Driver) { }
 
   async getConnection() {
     return this.driver.session().run(`MATCH (n) RETURN n LIMIT 25`);
@@ -29,7 +29,7 @@ export class Neo4jService {
       const query = `CREATE (a:annotation {id: ${idAnnotation}})`;
 
       const queryRelation =
-      `MATCH (a:annotation{id:${idAnnotation}})
+        `MATCH (a:annotation{id:${idAnnotation}})
       OPTIONAL MATCH (u:user{id:${idUser}})
       CREATE (u)-[:CREATED]->(a)`;
       await this.driver
@@ -39,6 +39,18 @@ export class Neo4jService {
       await this.driver
         .session()
         .run(queryRelation);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async deleteNodeAnnotation(idAnnotation) {
+    idAnnotation = JSON.stringify(idAnnotation);
+    try {
+      const query = `MATCH (n:annotation {id: ${idAnnotation}})
+      DETACH DELETE n`;
+
+      await this.driver.session().run(query);
     } catch (error) {
       console.log(error);
     }

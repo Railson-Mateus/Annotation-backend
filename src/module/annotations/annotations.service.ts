@@ -18,7 +18,7 @@ export class AnnotationsService {
     @InjectModel(Annotation.name)
     private annotationModel: Model<AnnotationDocument>,
     private neo4jService: Neo4jService,
-  ) {}
+  ) { }
 
   async create(createAnnotationDto: CreateAnnotationDto, user: User) {
     const data = {
@@ -104,6 +104,12 @@ export class AnnotationsService {
     });
     if (!annotation) {
       throw new Error('anotação não encontrada');
+    }
+    try {
+      const node = await this.neo4jService.deleteNodeAnnotation(id);
+      console.log('Deletou nó');
+    } catch (error) {
+      console.log(error);
     }
     return annotation;
   }
