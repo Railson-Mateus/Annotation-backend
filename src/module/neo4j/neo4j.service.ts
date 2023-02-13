@@ -8,22 +8,37 @@ export class Neo4jService {
   async getConnection() {
     return this.driver.session().run(`MATCH (n) RETURN n LIMIT 25`);
   }
-  async createNode(idAnnotation, idUser) {
-    idUser = JSON.stringify(idUser);
-    idAnnotation = JSON.stringify(idAnnotation);
+  async createNodeUser(id) {
+    id = JSON.stringify(id);
     try {
-      const query = `CREATE (a:Annotation {id: ${idAnnotation}}), (u:User {id: ${idUser}})`;
-      const relacao = `MATCH (a),(u) CREATE (a)-[r:RELTYPE]->(u)`;
+      const query = `CREATE (u:user {id: ${id}})`;
 
       await this.driver
         .session()
-        .run(query)
-        .then(() => console.log('Created Node'));
+        .run(query);
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async createNodeAnnotation(idAnnotation, idUser) {
+    idAnnotation = JSON.stringify(idAnnotation);
+    idUser = JSON.stringify(idUser);
+    try {
+      const query = `CREATE (a:annotation {id: ${idAnnotation}})`;
+
+      const queryRelation =
+      `MATCH (a:annotation{id:${idAnnotation}})
+      OPTIONAL MATCH (u:user{id:${idUser}})
+      CREATE (u)-[:CREATED]->(a)`;
+      await this.driver
+        .session()
+        .run(query);
 
       await this.driver
         .session()
-        .run(relacao)
-        .then(() => console.log('Created Relation'));
+        .run(queryRelation);
     } catch (error) {
       console.log(error);
     }

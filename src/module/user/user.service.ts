@@ -4,10 +4,14 @@ import { PrismaService } from '../../database/PrismaService';
 import * as bcrypt from 'bcrypt';
 import { User } from './entities/user.entity';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Neo4jService } from '../neo4j/neo4j.service';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private neo4jService: Neo4jService
+  ) {}
 
   async create(createUserDto: CreateUserDto) {
     const userExists = await this.prisma.user.findFirst({
@@ -27,6 +31,14 @@ export class UserService {
     };
 
     const createdUser = await this.prisma.user.create({ data });
+
+    try {
+      const node = await this.neo4jService.createNodeUser(
+        createdUser.id
+      );
+    } catch (error) {
+      console.log(error);
+    }
 
     return {
       ...createdUser,

@@ -31,7 +31,7 @@ export class AnnotationsService {
     });
 
     try {
-      const node = await this.neo4jService.createNode(
+      const node = await this.neo4jService.createNodeAnnotation(
         createAnnotation.id,
         user.id,
       );
